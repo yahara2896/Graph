@@ -15,12 +15,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import graph.MySQL;
-
-import java.awt.Button;
 
 public class Graph_view extends Frame implements ActionListener,WindowListener
 {
@@ -45,31 +41,33 @@ public class Graph_view extends Frame implements ActionListener,WindowListener
 		add(button1);
 		add(button2);
 
+		
 		addWindowListener(this);
 		setTitle("Graph");
+		
+		DefaultCategoryDataset data = new DefaultCategoryDataset();
+				
 		String name,year;
 		int ton;
 		ResultSet rs;
 		
 		MySQL mysql = new MySQL();
 		
-		
-		DefaultCategoryDataset data = new DefaultCategoryDataset();
-		
 		rs = mysql.selectAll();
 		
 		
 		try {
 			while(rs.next()){
-				name = rs.getString("name");
-				year = rs.getString("year");
-				ton = rs.getInt("ton");
-				data.addValue(ton,name,year);
-			}
-		} catch (SQLException e1) {
+					name = rs.getString("name");
+					year = rs.getString("year");
+					ton = rs.getInt("ton");
+					data.addValue(ton,name,year);
+				}
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
+		
 		
 		
 		if(chart == "Line") {
