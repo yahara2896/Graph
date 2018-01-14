@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -16,6 +18,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import graph.MySQL;
 
 import java.awt.Button;
 
@@ -44,18 +47,30 @@ public class Graph_view extends Frame implements ActionListener,WindowListener
 
 		addWindowListener(this);
 		setTitle("Graph");
-
+		String name,year;
+		int ton;
+		ResultSet rs;
 		
-		DefaultCategoryDataset  data = new DefaultCategoryDataset();
+		MySQL mysql = new MySQL();
 		
-		data.addValue(300, "USA", "2005");
-		data.addValue(500, "USA", "2006");
-		data.addValue(120, "USA", "2007");
-
-		data.addValue(200, "China", "2005");
-		data.addValue(400, "China", "2006");
-		data.addValue(320, "China", "2007");
-
+		
+		DefaultCategoryDataset data = new DefaultCategoryDataset();
+		
+		rs = mysql.selectAll();
+		
+		
+		try {
+			while(rs.next()){
+				name = rs.getString("name");
+				year = rs.getString("year");
+				ton = rs.getInt("ton");
+				data.addValue(ton,name,year);
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		
 		if(chart == "Line") {
 			JFreeChart chart1 = 
@@ -71,6 +86,7 @@ public class Graph_view extends Frame implements ActionListener,WindowListener
 	    			ChartPanel cpane2 = new ChartPanel(chart2);
 	    			add(cpane2, BorderLayout.CENTER);
 		}
+		
     		
 	}
 	
